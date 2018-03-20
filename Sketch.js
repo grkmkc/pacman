@@ -1,6 +1,7 @@
 var pad_one, pad_two;
 var p0v, p1v;   //paddles velocity
 var pong, pongv;
+var p1score, p2score;
 
 function setup() {
     createCanvas(800,600);
@@ -10,8 +11,14 @@ function setup() {
     p0v =0;
     p1v =0;
 
+    p1score = p2score = 0;
+
     pong = createVector(width/2, height/2);
     pongv = createVector(random(5), random (5));
+
+    textAlign(CENTER);
+    textSize(30);
+    fill(0, 200 , 150);
 
 
   }
@@ -26,9 +33,18 @@ function draw() {
     
     /*draw ball */
     ellipse(pong.x, pong.y, 20);
+
+
+
+  /*draw scoreboard */
+
+    text(p1score + " | " + p2score, width/2, 50);
+
    
     /*for keyboard inputs */
+
     handlePads();
+
     handlePong();
   }
   function handlePong() { 
@@ -39,10 +55,22 @@ function draw() {
       /*paddle collision */
       if (pong.x < 30) {  //right side 
 
-        if (pong.y >= pad_one && pong.y <= pad_one + 100)
+        if (pong.x <= 10){
+          p2score++;
+          reset();
+
+        }
+
+      if (pong.y >= pad_one && pong.y <= pad_one + 100)
           pongv.x *= -1;
 
       } else if (pong.x > width - 30) { // left side 
+
+        if(pong.x >= width - 20){
+          p1score++;
+          reset();
+          return;
+        }
 
         if (pong.y >= pad_two && pong.y <= pad_two + 100)
           pongv.x *= -1;
@@ -54,6 +82,10 @@ function draw() {
 
 
    }
+
+  function reset() {  
+    pong = createVector (width / 2, height / 2);
+  } 
 
   function handlePads() {  
 
@@ -67,7 +99,7 @@ function draw() {
       p0v -= 10 ;
     }
   
-  /*player two */
+/*player two */
 
 /*moveup  Arrows*/
   if (keyIsDown(DOWN_ARROW)){
@@ -78,8 +110,8 @@ function draw() {
     p1v -= 10;
   }
       /*for movement reality */
-      p0v *= 0.3;
-      p1v *= 0.3;
+      p0v *= 0.4;
+      p1v *= 0.4;
 
       pad_one += p0v;
       pad_two += p1v;
